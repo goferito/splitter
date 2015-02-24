@@ -9,7 +9,7 @@ var Splittable = React.createClass({
 
   getInitialState: function(){
     return {
-      grid: [[{url: 'Welcome'}]]
+      grid: [[{url: '//locksha.de'}]]
     };
   },
 
@@ -32,7 +32,7 @@ var Splittable = React.createClass({
 
         gridP.splice(colPos, 0, gridP[colPos]);
 
-      }else{ // New Row...
+      }else if(option == 'newRow'){
 
         var colPos = colKey.split('_').pop()
 
@@ -40,15 +40,24 @@ var Splittable = React.createClass({
           gridP = gridP[i*1];
         });
 
-        console.log(gridP);
         var colCopy = JSON.parse(JSON.stringify(gridP[colPos]));
-        console.log('colcopy', colCopy);
 
         gridP[colPos] = [[colCopy],[colCopy]];
 
+      } else { // Close
+
+        //TODO
+        // If only one column, delete also the row
+        var colPos = colKey.split('_').pop()
+
+        colKey.split('_').slice(0, -1).forEach(function(i){
+          gridP = gridP[i*1];
+        });
+
+        gridP.splice(colPos, 1);
+
       }
 
-      console.log(grid);
       this.setState({grid: grid});
 
     }.bind(this);
@@ -59,12 +68,14 @@ var Splittable = React.createClass({
       <div className="colContent">
         <div className="controls">
           Open new window: &nbsp; 
-          <a onClick={this.handleClick('newCol', colKey)} className="glyphicon glyphicon-arrow-left"></a>
-          <a onClick={this.handleClick('newRow', colKey)} className="glyphicon glyphicon-arrow-up"></a>
-          <a onClick={this.handleClick('newRow', colKey)} className="glyphicon glyphicon-arrow-down"></a>
-          <a onClick={this.handleClick('newCol', colKey)} className="glyphicon glyphicon-arrow-right"></a>
+          <a onClick={this.handleClick('newRow', colKey)}
+             className="glyphicon glyphicon-circle-arrow-down"></a>
+          <a onClick={this.handleClick('newCol', colKey)}
+             className="glyphicon glyphicon-circle-arrow-right"></a>
+          <a onClick={this.handleClick('close', colKey)}
+             className="glyphicon glyphicon-remove-sign"></a>
         </div>
-        <div className="iframe">{ 'URL: ' + col.url }</div>
+        <iframe src={col.url} />
       </div>
 
     );
