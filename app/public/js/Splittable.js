@@ -9,7 +9,7 @@ var Splittable = React.createClass({
 
   getInitialState: function(){
     return {
-      grid: [[{url: '//locksha.de'}]]
+      grid: [[{url: '//google.com/custom'}]]
     };
   },
 
@@ -63,11 +63,27 @@ var Splittable = React.createClass({
     }.bind(this);
   },
 
+  openSearchNgin: function(colKey){
+
+    return function(e){
+      e.stopPropagation();
+      console.log(colKey);
+      document.querySelector('#frame_' + colKey)
+              .setAttribute('src', '//google.com/custom')
+    }
+    
+    //TODO allow the user to change the search engine. Their preferences 
+    // can be stored in a cookie. This function should take the engine
+    // from that cookie
+    
+  },
+
   renderColContent: function(col, colKey){
     return (
       <div className="colContent">
         <div className="controls">
-          Open new window: &nbsp; 
+          <a onClick={this.openSearchNgin(colKey)}
+             className="glyphicon glyphicon-search"></a>
           <a onClick={this.handleClick('newRow', colKey)}
              className="glyphicon glyphicon-circle-arrow-down"></a>
           <a onClick={this.handleClick('newCol', colKey)}
@@ -75,7 +91,9 @@ var Splittable = React.createClass({
           <a onClick={this.handleClick('close', colKey)}
              className="glyphicon glyphicon-remove-sign"></a>
         </div>
-        <iframe src={col.url} />
+        <iframe
+          id={'frame_' + colKey}
+          src={col.url} />
       </div>
 
     );
