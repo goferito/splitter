@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "Web app to split the screen in different iframes",
   "main": "index.js",
+  "author": "Mr. Goferito",
+  "license": "MIT",
   "scripts": {
     "test": "mocha"
   },
