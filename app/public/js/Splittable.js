@@ -20,7 +20,7 @@ var Splittable = React.createClass({
       console.log(option + ' - ' + colKey + ' click!');
 
       var grid = JSON.parse(JSON.stringify(this.state.grid))
-        , gridP = grid // Used for iteration
+        , gridP = grid // Used for iteration (grid Pointer)
 
       if(option == 'newCol'){
 
@@ -46,16 +46,26 @@ var Splittable = React.createClass({
 
       } else { // Close
 
-        //TODO
-        // If only one column, delete also the row
-        var colPos = colKey.split('_').pop()
+        var parentP = grid
+          , ancestors = []
 
-        colKey.split('_').slice(0, -1).forEach(function(i){
-          gridP = gridP[i*1];
-        });
+        var path = colKey.split('_');
 
-        gridP.splice(colPos, 1);
+        for(var i = 0; i < path.length - 1; i++){
+          parentP = parentP[path[i]];
+          ancestors.push(parentP);
+        }
 
+        parentP.splice(path[i + 1], 1); // Remove the col
+
+        // Remove empty rows
+        for(var j = ancestors.length - 1; j > 0; j--){
+          if(ancestors[j].length === 0){
+            ancestors[j - 1].splice(path[j], 1);
+          }else{
+            break;
+          }
+        }
       }
 
       this.setState({grid: grid});
